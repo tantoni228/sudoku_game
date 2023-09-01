@@ -7,23 +7,23 @@ import os.path
 import sys
 
 
-if not os.path.exists("files.txt"):  # проверка сущетвование файла
-    sudoku = Generation_sudoku('лёгкий')  # начало генерации судоку
+if not os.path.exists("files.txt"):  # checking the existence of a file
+    sudoku = Generation_sudoku('лёгкий')  # start of sudoku generation
     sudoku.mix()
     sudoku.eating_cells()
-    full_sudoku, incomplete_sudoku = sudoku.listing()  # получаем значение полного и неполного судоку
-    f = open("files.txt", 'w')  # создание файла
-    for i in range(9):  # запись данных о судоку
+    full_sudoku, incomplete_sudoku = sudoku.listing()  # get the value of full and incomplete sudoku
+    f = open("files.txt", 'w') # creating a file
+    for i in range(9):  # record sudoku data
         for g in range(9):
-            f.write(str(i * 9 + g))  # номер клетки начиная с 0
+            f.write(str(i * 9 + g))  # cell number starting from 0
             f.write(" ")
-            f.write(str(full_sudoku[i][g]))  # значение в полном судоку
+            f.write(str(full_sudoku[i][g]))  # meaning in full sudoku
             f.write(" ")
-            f.write(str(incomplete_sudoku[i][g]))  # значение в неполном судоку
+            f.write(str(incomplete_sudoku[i][g]))  # meaning in incomplete sudoku
             f.write('\n')
     else:
         f.write('лёгкий')
-    f.close()  # закрытие файла
+    f.close()  # closing the file
 
 
 class Example(QWidget):
@@ -34,7 +34,7 @@ class Example(QWidget):
     def initUI(self):
         self.setGeometry(0, 0, 630, 590)
 
-        # Создание кнопок
+        # Creating buttons
         self.btns = []
         for i in range(9):
             self.btns.append([])
@@ -51,7 +51,7 @@ class Example(QWidget):
         self.pushButton.setText("Отчистить")
         self.pushButton.clicked.connect(self.clean)
 
-        # Создание надписи "Судоку"
+        # Creating the inscription "Sudoku"
         self.label = QLabel(self)
         self.label.setGeometry(QtCore.QRect(200, 0, 200, 55))
         self.label.setMouseTracking(True)
@@ -59,7 +59,7 @@ class Example(QWidget):
         self.label.setTextFormat(QtCore.Qt.MarkdownText)
         self.label.setText("<html><head/><body><p align=\"center\"><span style=\" font-size:36pt; font-weight:600; font-style:italic; color:#203eff;\">Судоку</span></p></body></html>")
 
-        # Создание надписи "Уровень:"
+        # Creating the label "Level:"
         self.label_2 = QLabel(self)
         self.label_2.setGeometry(QtCore.QRect(30, 100, 90, 30))
         self.label_2.setText("<html><head/><body><p><span style=\" font-size:16pt;\">Уровень:</span></p></body></html>")
@@ -140,9 +140,9 @@ class Example(QWidget):
         self.pushButton_check.setGeometry(QtCore.QRect(360, 160, 241, 51))
         self.pushButton_check.setStyleSheet("font: 16pt \"MS Shell Dlg 2\";")
         self.pushButton_check.setIconSize(QtCore.QSize(16, 16))
-        self.pushButton_check.setToolTip("<html><head/><body><p align=\"center\"><span style=\" font-size:16pt; font-weight:600;\">Проверить</span></p></body></html>")
-        self.pushButton_check.setWhatsThis("<html><head/><body><p align=\"center\"><span style=\" font-size:26pt;\">Проверить</span></p></body></html>")
-        self.pushButton_check.setText("Проверить")
+        self.pushButton_check.setToolTip("<html><head/><body><p align=\"center\"><span style=\" font-size:16pt; font-weight:600;\">Check</span></p></body></html>")
+        self.pushButton_check.setWhatsThis("<html><head/><body><p align=\"center\"><span style=\" font-size:26pt;\">Check</span></p></body></html>")
+        self.pushButton_check.setText("Check")
         self.pushButton_check.clicked.connect(self.check)
 
         self.pushButton_start_newgame = QPushButton(self)
@@ -151,25 +151,25 @@ class Example(QWidget):
         self.pushButton_start_newgame.setIconSize(QtCore.QSize(16, 16))
         self.pushButton_start_newgame.setToolTip("<html><head/><body><p align=\"center\"><span style=\" font-size:16pt; font-weight:600;\">Новая игра</span></p></body></html>")
         self.pushButton_start_newgame.setWhatsThis("<html><head/><body><p align=\"center\"><span style=\" font-size:26pt;\">Новая игра</span></p></body></html>")
-        self.pushButton_start_newgame.setText("Новая игра")
+        self.pushButton_start_newgame.setText("New game")
         self.pushButton_start_newgame.clicked.connect(self.new_game)
 
-        h = open("files.txt", "rt")  # открытие файла файла
+        h = open("files.txt", "rt") # opening a file file
         values = h.readlines()
         for i in range(9):
             for j in range(9):
                 value = values[i * 9 + j].split()[2]
                 if value != "0":
-                    self.btns[i][j].setText(value)  # присваивание каждому известному элементу значение
-        h.close()  # закрытие файла
+                    self.btns[i][j].setText(value)  # assigning each known element a value
+        h.close()  # closing the file
         self.active_now_btn = None
 
-    def active(self):  # запоминает какая кнонка была вкдючена
+    def active(self):  # remembers which button was turned on
         self.active_now_btn = self.sender()
         index = [item for sublist in self.btns for item in sublist].index(self.active_now_btn)
         with open('files.txt', 'rt') as f:
             value = f.readlines()[index].split()[2]
-        if value != "0":  # проврка на текст
+        if value != "0":  # checking for text
             self.active_now_btn = None
 
     def assignment(self):
@@ -183,16 +183,16 @@ class Example(QWidget):
         for i in range(9):
             for j in range(9):
                 if self.btns[i][j].text() == "":
-                    QMessageBox.information(self, 'Предупреждение', 'Проверьте ещё раз все ли ячейки заполнены.', QMessageBox.Ok | QMessageBox.Cancel)
+                    QMessageBox.information(self, 'Warning', 'Check again if all the cells are filled.', QMessageBox.Ok | QMessageBox.Cancel)
                     return
                 elif values[i * 9 + j].split()[1] != self.btns[i][j].text():
-                    QMessageBox.information(self, 'Предупреждение', 'У вас есть ошибка. Проверьте ещё раз.', QMessageBox.Ok | QMessageBox.Cancel)
+                    QMessageBox.information(self, 'Warning', 'You have a mistake. Check again.', QMessageBox.Ok | QMessageBox.Cancel)
                     return
         else:
-            self.difficulty_level = 'лёгкий'
+            self.difficulty_level = 'easy'
             self.user = self.lineEdit.text()
-            ful = f"Отличный результат, {self.user}!!!\nУровень: {self.difficulty_level}"
-            QMessageBox.information(self, 'Вы победитель!!!', ful, QMessageBox.Ok | QMessageBox.Cancel)
+            ful = f"Great result, {self.user}!!!\nLevel: {self.difficulty_level}"
+            QMessageBox.information(self, 'You have won!!!', ful, QMessageBox.Ok | QMessageBox.Cancel)
             self.new_game()
 
     def keyPressEvent(self, event):
@@ -226,58 +226,58 @@ class Example(QWidget):
 
     def new_game(self):
         self.difficulty_level = None
-        self.choice = QMessageBox.question(self, "", "Вы точно хотите начать новую игру?\nПрогресс предыдущей игры будет потерян.", QMessageBox.Yes | QMessageBox.No)
+        self.choice = QMessageBox.question(self, "", "Are you sure you want to start a new game?The progress of the previous game will be lost.", QMessageBox.Yes | QMessageBox.No)
         if self.choice == QMessageBox.No:
             return
-        self.difficulty_level, ok_pressed = QInputDialog.getItem(self, "Уровень", "Выберите уровень сложности", ("лёгкий", "средний", "сложный(на стадии тестирования)"), 1, False)
-        if self.difficulty_level == "сложный(на стадии тестирования)":
+        self.difficulty_level, ok_pressed = QInputDialog.getItem(self, "Level", "Choose the difficulty level", ("easy", "medium", "difficult(at the testing stage)"), 1, False)
+        if self.difficulty_level == "diffuclt(at the testing stage)":
             self.difficulty_level = "сложный"
-        sudoku = Generation_sudoku(self.difficulty_level)  # начало генерации судоку
+        sudoku = Generation_sudoku(self.difficulty_level) # start of sudoku generation
         sudoku.mix()
         sudoku.eating_cells()
-        full_sudoku, incomplete_sudoku = sudoku.listing()  # получаем значение полного и неполного судоку
-        f = open("files.txt", 'w')  # создание файла
-        for i in range(9):  # запись данных о судоку
+        full_sudoku, incomplete_sudoku = sudoku.listing()  # get the value of full and incomplete sudoku
+        f = open("files.txt", 'w')  # creating a file
+        for i in range(9):  # record sudoku data
             for g in range(9):
-                f.write(str(i * 9 + g))  # номер клетки начиная с 0
+                f.write(str(i * 9 + g))  # cell number starting from 0
                 f.write(" ")
-                f.write(str(full_sudoku[i][g]))  # значение в полном судоку
+                f.write(str(full_sudoku[i][g]))  # meaning in full sudoku
                 f.write(" ")
-                f.write(str(incomplete_sudoku[i][g]))  # значение в неполном судоку
+                f.write(str(incomplete_sudoku[i][g]))  # meaning in incomplete sudoku
                 f.write('\n')
         else:
             f.write(f'{self.difficulty_level}')
-        f.close()  # закрытие файла
+        f.close()  # closing the file
 
-        f = open("files.txt", "rt")  # открытие файла файла
+        f = open("files.txt", "rt")  # opening a file file
         values = f.readlines()
         for i in range(9):
             for j in range(9):
                 value = values[i * 9 + j].split()[2]
                 if value != "0":
-                    self.btns[i][j].setText(value)  # присваивание каждому известному элементу значение
+                    self.btns[i][j].setText(value)  # assigning each known element a value
                 else:
                     self.btns[i][j].setText("")
-        f.close()  # закрытие файла
+        f.close()  # closing the file
         self.active_now_btn = None
-        if self.difficulty_level == "лёгкий":
-            self.label_3.setText("<html><head/><body><p><span style=\" font-size:16pt;\">лёгкий</span></p></body></html>")
-        elif self.difficulty_level == "средний":
-            self.label_3.setText("<html><head/><body><p><span style=\" font-size:16pt;\">средний</span></p></body></html>")
+        if self.difficulty_level == "easy":
+            self.label_3.setText("<html><head/><body><p><span style=\" font-size:16pt;\">easy</span></p></body></html>")
+        elif self.difficulty_level == "medium":
+            self.label_3.setText("<html><head/><body><p><span style=\" font-size:16pt;\">medium</span></p></body></html>")
         else:
-            self.label_3.setText("<html><head/><body><p><span style=\" font-size:16pt;\">сложный</span></p></body></html>")
+            self.label_3.setText("<html><head/><body><p><span style=\" font-size:16pt;\">difficult</span></p></body></html>")
 
     def paintEvent(self, event):
-        # Создаем объект QPainter для рисования
+        # Creating a QPainter object for drawing
         qp = QPainter()
-        # Начинаем процесс рисования
+        # Starting the drawing process
         qp.begin(self)
         self.draw_flag(qp)
-        # Завершаем рисование
+        # Finishing drawing
         qp.end()
 
     def draw_flag(self, qp):
-        # Рисуем прямоугольник
+        # Draw a rectangle
         for i in range(3):
             for j in range(3):
                 qp.drawRect(29 + 93 * j, 139 + 93 * i, 93, 93)
